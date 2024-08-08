@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackit/features/accounts/data/repositories/account_repository_impl.dart';
 import 'package:trackit/features/accounts/domain/repositiories/account_repository.dart';
 import 'package:trackit/features/accounts/domain/usecases/add_account.dart';
@@ -29,5 +30,8 @@ Future<void> init() async {
 
   // ! External
   final database = DatabaseHelper.instance;
+  final sharedPreferences = await SharedPreferences.getInstance();
+
   sl.registerLazySingleton(() => database);
+  sl.registerLazySingleton(() => sharedPreferences);
 }

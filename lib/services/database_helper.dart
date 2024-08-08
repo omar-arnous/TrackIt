@@ -35,19 +35,6 @@ class DatabaseHelper {
       )
       ''');
     await db.execute('''
-      CREATE TABLE $TRANSACTIONSTABLENAME (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        NOTE TEXT NOT NULL,
-        transactionType TEXT NOT NULL,
-        categoryId INTEGER,
-        accountId INTEGER,
-        amount INTEGER NOT NULL,
-        
-        FOREIGN KEY (categoryId) REFERENCES $CATEGORIESTABLENAME (id),
-        FOREIGN KEY (accountId) REFERENCES $ACCOUNTSTABLENAME (id)
-      )
-      ''');
-    await db.execute('''
       CREATE TABLE $CATEGORIESTABLENAME (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -55,5 +42,17 @@ class DatabaseHelper {
         color TEXT NOT NULL
       )
     ''');
+    await db.execute('''
+      CREATE TABLE $TRANSACTIONSTABLENAME (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        NOTE TEXT,
+        transactionType TEXT NOT NULL,
+        category TEXT NOT NULL,
+        amount INTEGER NOT NULL,
+        accountId INTEGER,
+        
+        FOREIGN KEY (accountId) REFERENCES $ACCOUNTSTABLENAME (id)
+      )
+      ''');
   }
 }
