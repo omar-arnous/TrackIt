@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 class Category extends Equatable {
   final int? id;
   final String name;
-  final String color;
-  final String icon;
+  final int color;
+  final IconData icon;
 
   const Category(
       {this.id, required this.name, required this.color, required this.icon});

@@ -6,7 +6,7 @@ import 'package:trackit/features/categories/domain/repositories/category_reposit
 class GetAllCategoriesUseCase {
   final CategoryRepository repository;
 
-  GetAllCategoriesUseCase({required this.repository});
+  GetAllCategoriesUseCase(this.repository);
 
   Future<Either<Failure, List<Category>>> call() async {
     return await repository.getAllCategories();
