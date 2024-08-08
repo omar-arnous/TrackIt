@@ -12,7 +12,8 @@ class AccountModel extends Account {
     return AccountModel(
       id: json['id'],
       name: json['name'],
-      accountType: json['accountType'],
+      accountType: AccountType.values
+          .firstWhere((e) => e.toString() == json['accountType']),
     );
   }
 

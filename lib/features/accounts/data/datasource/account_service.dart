@@ -1,5 +1,4 @@
 import 'package:trackit/error/exceptions.dart';
-import 'package:trackit/error/failures.dart';
 import 'package:trackit/models/account_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:trackit/services/database_helper.dart';
@@ -20,19 +19,27 @@ class AccountLocalDataSourceImpl implements AccountService {
   @override
   Future<Unit> addAccount(AccountModel account) async {
     final db = await dbService.database;
+    final data = {
+      "name": account.name,
+      "accountType": account.accountType.toString()
+    };
 
-    db.insert(ACCOUNTSTABLENAME,
-        {"name": account.name, "accountType": account.accountType.toString()});
-
-    print(account);
+    await db.insert(ACCOUNTSTABLENAME, data);
 
     return Future.value(unit);
   }
 
   @override
-  Future<Unit> deleteAccount(int accountId) {
-    // TODO: implement deleteAccount
-    throw UnimplementedError();
+  Future<Unit> deleteAccount(int accountId) async {
+    final db = await dbService.database;
+    final res = await db
+        .delete(ACCOUNTSTABLENAME, where: 'id = ?', whereArgs: [accountId]);
+
+    if (res == 1) {
+      return Future.value(unit);
+    } else {
+      throw UnhandledOperationException();
+    }
   }
 
   @override
@@ -44,7 +51,6 @@ class AccountLocalDataSourceImpl implements AccountService {
       final List<AccountModel> accounts = data
           .map<AccountModel>((account) => AccountModel.fromJson(account))
           .toList();
-      print(accounts);
       return accounts;
     } else {
       throw EmptyCacheException();
@@ -52,8 +58,20 @@ class AccountLocalDataSourceImpl implements AccountService {
   }
 
   @override
-  Future<Unit> updateAccount(AccountModel account) {
-    // TODO: implement updateAccount
-    throw UnimplementedError();
+  Future<Unit> updateAccount(AccountModel account) async {
+    final db = await dbService.database;
+    final data = {
+      "name": account.name,
+      "accountType": account.accountType.toString()
+    };
+
+    final res = await db.update(ACCOUNTSTABLENAME, data,
+        where: 'id = ?', whereArgs: [account.id]);
+
+    if (res == 1) {
+      return Future.value(unit);
+    } else {
+      throw UnhandledOperationException();
+    }
   }
 }

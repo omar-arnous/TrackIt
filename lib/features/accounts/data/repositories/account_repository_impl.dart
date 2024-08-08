@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
+import 'package:trackit/error/exceptions.dart';
 import 'package:trackit/error/failures.dart';
 import 'package:trackit/features/accounts/domain/entities/account.dart';
 import 'package:trackit/features/accounts/domain/repositiories/account_repository.dart';
 import 'package:trackit/models/account_model.dart';
-import 'package:trackit/services/account_service.dart';
+import 'package:trackit/features/accounts/data/datasource/account_service.dart';
 
 typedef DeleteOrUpdateOrAddAccount = Future<Unit> Function();
 
@@ -23,21 +24,30 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> deleteAccount(int id) {
-    // TODO: implement deleteAccount
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> deleteAccount(int accountId) async {
+    return await _getMessage(() {
+      return accountService.deleteAccount(accountId);
+    });
   }
 
   @override
   Future<Either<Failure, List<AccountModel>>> getAllAccounts() async {
-    final accounts = await accountService.getAllAccounts();
-    return right(accounts);
+    try {
+      final accounts = await accountService.getAllAccounts();
+      return right(accounts);
+    } on EmptyCacheException {
+      return Left(EmptyCacheFailure());
+    }
   }
 
   @override
-  Future<Either<Failure, Unit>> updateAccount(Account account) {
-    // TODO: implement updateAccount
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> updateAccount(Account account) async {
+    final AccountModel updatedAccount = AccountModel(
+        id: account.id, name: account.name, accountType: account.accountType);
+
+    return await _getMessage(() {
+      return accountService.updateAccount(updatedAccount);
+    });
   }
 
   Future<Either<Failure, Unit>> _getMessage(

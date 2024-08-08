@@ -5,7 +5,7 @@ import 'package:trackit/features/accounts/domain/usecases/add_account.dart';
 import 'package:trackit/features/accounts/domain/usecases/delete_account.dart';
 import 'package:trackit/features/accounts/domain/usecases/get_all_accounts.dart';
 import 'package:trackit/features/accounts/domain/usecases/update_account.dart';
-import 'package:trackit/services/account_service.dart';
+import 'package:trackit/features/accounts/data/datasource/account_service.dart';
 import 'package:trackit/services/database_helper.dart';
 
 final sl = GetIt.instance;
